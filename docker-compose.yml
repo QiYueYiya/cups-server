@@ -1,0 +1,20 @@
+services:
+  cups:
+    image: ghcr.io/qiyueyiya/cups-server:latest
+    container_name: cups
+    user: root
+    hostname: CUPS
+    network_mode: host
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      - CUPSADMIN=${CUPSADMIN:-admin}
+      - CUPSPASSWORD=${CUPSPASSWORD:-admin}
+      - TZ=${TZ:-Asia/Shanghai}
+    volumes:
+      - ./cups-config:/etc/cups
+      - /dev/bus/usb:/dev/bus/usb
+      - /run/udev:/run/udev:ro
+    device_cgroup_rules:
+      - 'c 189:* rmw'
+    restart: unless-stopped
